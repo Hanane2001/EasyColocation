@@ -8,99 +8,87 @@
     
     <title>@yield('title', 'EasyColoc') - Gestion de colocation</title>
     
-    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- Additional Styles -->
     @stack('styles')
 </head>
-<body class="font-sans antialiased">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm fixed w-full z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <!-- Logo -->
-                    <a href="/" class="flex items-center text-indigo-600 font-bold text-xl">
-                        <i class="fas fa-home mr-2"></i> EasyColoc
-                    </a>
+<body class="bg-[#F8FAFC] font-sans antialiased text-slate-700">
+
+    <div class="flex min-h-screen">
+        @auth
+            <aside class="w-64 bg-white border-r border-gray-100 flex flex-col p-6 fixed h-full z-20">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-10">
+                        <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
+                            <i class="fas fa-home text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold text-indigo-900 tracking-tight">EasyColoc</span>
+                    </div>
+
+                    <nav class="space-y-1">
+                        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50' }} rounded-xl font-medium transition-all">
+                            <i class="fas fa-th-large w-5"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="{{ route('colocations') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('colocations.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50' }} rounded-xl font-medium transition-all">
+                            <i class="fas fa-users w-5"></i>
+                            <span>Colocations</span>
+                        </a>
+                        
+                        <div class="text-[10px] font-bold text-gray-300 uppercase tracking-widest px-4 mt-8 mb-2">Admin</div>
+                        
+                        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('profile.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50' }} rounded-xl font-medium transition-all">
+                            <i class="fas fa-user-circle w-5"></i>
+                            <span>Profile</span>
+                        </a>
+                    </nav>
                 </div>
 
-                <!-- Right Navigation -->
-                <div class="flex items-center space-x-4">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                            Tableau de bord
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Connexion</a>
-                        <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                            Inscription
-                        </a>
-                    @endauth
+                <div class="space-y-4">
+                    <!-- <div class="bg-[#0F172A] rounded-2xl p-5 text-white shadow-lg shadow-slate-200">
+                        <div class="text-[9px] uppercase text-slate-400 font-bold mb-1 tracking-wider">Votre réputation</div>
+                        <div class="text-lg font-bold mb-3">+{{-- Auth::user()->reputation ?? 0 --}} points</div>
+                        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-emerald-500 h-full w-1/4"></div>
+                        </div>
+                    </div> -->
+
+                    <div class="pt-2 border-t border-gray-50">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-rose-400 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-bold transition-all group">
+                                <i class="fas fa-sign-out-alt w-5 transition-transform group-hover:-translate-x-1"></i>
+                                <span>Déconnexion</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="pt-16">
-        @yield('content')
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Company Info -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">EasyColoc</h3>
-                    <p class="text-gray-400 text-sm">
-                        Simplifiez la gestion de votre colocation avec notre application intuitive.
-                    </p>
-                </div>
-
-                <!-- Links -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Liens utiles</h3>
-                    
-                </div>
-
-                <!-- Legal -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Légal</h3>
-                    
-                </div>
-
-                <!-- Social -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i class="fab fa-linkedin-in"></i>
+            </aside>
+        @else
+            <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 fixed w-full z-20">
+                <div class="max-w-7xl mx-auto px-8 h-20 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
+                            <i class="fas fa-home text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold text-indigo-900 tracking-tight">EasyColoc</span>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <a href="{{ route('login') }}" class="text-sm font-bold text-slate-400 hover:text-indigo-600 transition-colors">Connexion</a>
+                        <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">
+                            S'inscrire
                         </a>
                     </div>
                 </div>
-            </div>
-            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-                &copy; {{ date('Y') }} EasyColoc. Tous droits réservés.
-            </div>
-        </div>
-    </footer>
+            </nav>
+        @endauth
 
-    <!-- Scripts -->
+        <main class="flex-1 {{ Auth::check() ? 'ml-64' : 'pt-20' }}">
+            @yield('content')
+        </main>
+    </div>
+
     @stack('scripts')
 </body>
 </html>
