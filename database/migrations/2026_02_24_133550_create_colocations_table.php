@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('colocations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('statusColocation', ['active', 'cancelled'])->default('cancelled');
-            $table->foreignId('user_id')->constraint('users')->ondelete('cascade');
+            $table->enum('statusColocation', ['active', 'cancelled'])->default('active');
+            $table->foreignId('owner_id')->constrained('users')->ondelete('cascade');
             $table->timestamps();
         });
     }

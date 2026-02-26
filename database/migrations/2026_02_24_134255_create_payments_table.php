@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount', 8, 2);
+            $table->foreignId('payer_id')->constrained('users')->ondelete('cascade');
+            $table->foreignId('receiver_id')->constrained('users')->ondelete('cascade');
+            $table->foreignId('colocation_id')->constrained('colocations')->ondelete('cascade');
             $table->timestamp('paid_at');
-            $table->foreignId('expense_id')->constraint('expenses')->ondelete('cascade');
-            $table->foreignId('user_id')->constraint('users')->ondelete('cascade');
             $table->timestamps();
         });
     }
