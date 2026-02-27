@@ -14,6 +14,10 @@
             Owner: {{ $colocation->owner->name }}
         </p>
 
+        <p class="text-xs mt-1 font-bold {{ $colocation->statusColocation === 'active' ? 'text-emerald-500' : 'text-gray-400' }}">
+            Status: {{ ucfirst($colocation->statusColocation) }}
+        </p>
+
         <p class="text-sm font-bold mt-2">
             Total Dépenses: 
             <span class="text-indigo-600">
@@ -56,6 +60,9 @@
             <li class="flex justify-between bg-white p-3 rounded shadow-sm items-center">
                 <div>
                     {{ $member->name }}
+                    <span class="text-xs text-indigo-500 ml-2">
+                        ({{-- $member->reputation --}} pts)
+                    </span>
                     @if($member->id === $colocation->owner_id)
                         <span class="text-xs text-orange-500">(Owner)</span>
                     @endif
@@ -107,29 +114,60 @@
         </div>
     @endif
 
-    <!-- Expenses -->
-    <div>
-        <h2 class="font-bold mb-4">Dépenses</h2>
+    <!-- Categories -->
+    @if($colocation->owner_id === auth()->id())
+    <div class="mb-10">
+        <h2 class="font-bold mb-4">Catégories</h2>
 
-        @forelse($colocation->expenses as $expense)
-            <div class="bg-white p-4 rounded shadow-sm mb-2 flex justify-between">
+        <form method="POST" 
+            action="{{ route('categories.store', $colocation) }}"
+            class="flex gap-2 mb-4">
+            @csrf
+            <input type="text" name="name" required
+                placeholder="Nouvelle catégorie"
+                class="border p-2 rounded w-64">
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded">
+                Ajouter
+            </button>
+        </form>
 
-                <div>
-                    <p class="font-bold">{{ $expense->title }}</p>
-                    <p class="text-xs text-gray-400">
-                        ajouté par {{ $expense->user->name ?? '' }}
-                    </p>
-                </div>
+        <ul class="space-y-2">
+            @foreach($colocation->categories as $category)
+                <li class="flex justify-between bg-white p-2 rounded shadow-sm">
+                    {{ $category->name }}
 
-                <div class="font-bold text-indigo-600">
-                    {{ $expense->amount }} DH
-                </div>
-
-            </div>
-        @empty
-            <p class="text-gray-400">Aucune dépense</p>
-        @endforelse
+                    <form method="POST"
+                        action="{{ route('categories.destroy', [$colocation, $category]) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button class="text-rose-500 text-xs">
+                            Supprimer
+                        </button>
+                    </form>
+                </li>
+            @endforeach
+        </ul>
     </div>
+    @endif
+
+    <!-- Expenses -->
+        <div class="mt-10">
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-bold text-lg">Dépenses</h2>
+
+                <a href="{{ route('expenses.index', $colocation) }}"
+                class="bg-indigo-600 text-white px-4 py-2 rounded text-sm">
+                    Voir toutes les dépenses
+                </a>
+            </div>
+
+            <a href="{{-- route('balances.show', $colocation) --}}"
+            class="bg-emerald-600 text-white px-4 py-2 rounded text-sm">
+            Voir les balances
+            </a>
+
+        </div>
 
 </div>
 

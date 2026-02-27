@@ -17,11 +17,21 @@ class Expense extends Model
         'expense_date'
     ];
 
+    protected $casts = [
+        'expense_date' => 'date',
+        'amount' => 'decimal:2'
+    ];
+
+
     public function colocation(){
         return $this->belongsTo(Colocation::class);
     }
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
     }
 }
