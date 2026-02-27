@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/colocations/{colocation}/invitations', [InvitationController::class, 'store'])->name('invitations.store');
     Route::post('/invitations/accept/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
     Route::post('/invitations/decline/{token}', [InvitationController::class, 'decline'])->name('invitations.decline');
+    Route::post('/colocations/{colocation}/generate-token',[InvitationController::class, 'generateTokenLink'])->name('invitations.generateToken');
+    Route::get('/join/{token}', [InvitationController::class, 'join'])->name('invitations.join');
 });
 
 require __DIR__.'/auth.php';

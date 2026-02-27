@@ -28,6 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if(session()->has('join_token')){
+            $token = session('join_token');
+            session()->forget('join_token');
+            return redirect('/join/'.$token);
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

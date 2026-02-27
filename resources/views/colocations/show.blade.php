@@ -94,6 +94,18 @@
             </form>
         </div>
     @endif
+    <form method="POST" action="{{ route('invitations.generateToken', $colocation) }}">
+        @csrf
+        <button class="bg-indigo-600 text-white px-3 py-1 rounded text-sm">
+            Générer lien public
+        </button>
+    </form>
+
+    @if(session('token_link'))
+        <div class="mt-3 bg-gray-100 p-2 rounded text-sm">
+            {{ session('token_link') }}
+        </div>
+    @endif
 
     <!-- Expenses -->
     <div>
