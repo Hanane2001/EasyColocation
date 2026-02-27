@@ -20,9 +20,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/unban/{user}', [AdminController::class, 'unban'])->name('admin.unban');
 });
 
-Route::get('/invitations', function () {
-    return view('invitations');
-})->middleware(['auth', 'verified'])->name('invitations');
+Route::get('/invitations/{token}', [InvitationController::class, 'show'])->name('invitations.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -37,9 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/colocations/{colocation}/cancel', [ColocationController::class, 'cancel'])->name('colocations.cancel');
     Route::post('/colocations/{colocation}/transfer', [ColocationController::class, 'transfer'])->name('colocations.transfer');
     // Invitations
-    Route::post('colocations/{colocation}/invite', [InvitationController::class, 'store']);
-    // Route::get('invitations/accept/{token}', [InvitationController::class, 'accept']);
-
+    Route::post('/colocations/{colocation}/invitations', [InvitationController::class, 'store'])->name('invitations.store');
     Route::post('/invitations/accept/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
     Route::post('/invitations/decline/{token}', [InvitationController::class, 'decline'])->name('invitations.decline');
 });

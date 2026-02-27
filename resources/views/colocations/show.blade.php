@@ -71,6 +71,21 @@
         </ul>
     </div>
 
+    @if($colocation->owner_id === auth()->id())
+        <div class="mb-8">
+            <h2 class="font-bold mb-3">Inviter un membre</h2>
+
+            <form method="POST" action="{{ route('invitations.store', $colocation) }}" class="flex gap-2">
+                @csrf
+                <input type="email" name="email" required placeholder="Email"
+                    class="border p-2 rounded w-64">
+                <button class="bg-indigo-600 text-white px-4 py-2 rounded">
+                    Envoyer
+                </button>
+            </form>
+        </div>
+    @endif
+
     <!-- Expenses -->
     <div>
         <h2 class="font-bold mb-4">Dépenses</h2>
