@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/colocations/{colocation}/leave', [ColocationController::class, 'leave'])->name('colocations.leave');
     Route::post('/colocations/{colocation}/cancel', [ColocationController::class, 'cancel'])->name('colocations.cancel');
     Route::post('/colocations/{colocation}/transfer', [ColocationController::class, 'transfer'])->name('colocations.transfer');
+    Route::post('/colocations/{colocation}/kick/{user}', [ColocationController::class, 'kickMember'])->name('colocations.kick');
     // Invitations
     Route::post('/colocations/{colocation}/invitations', [InvitationController::class, 'store'])->name('invitations.store');
     Route::post('/invitations/accept/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');

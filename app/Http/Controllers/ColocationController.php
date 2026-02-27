@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Colocation;
+use App\Models\User;
 
 class ColocationController extends Controller
 {
@@ -55,5 +56,20 @@ class ColocationController extends Controller
         }
         $colocation->update(['owner_id' => $request->new_owner_id]);
         return back();
+    }
+
+    public function kickMember(Colocation $colocation, User $user){
+        if($colocation->owner_id !== auth()->id()){
+            abort(403, 'just owner possible kick un membre.');
+        }
+        if($user->id === auth()->id()){
+            return back()->with('error', 'Vous ne pouvez pas vous retirer en tant qu’owner.');
+        }
+        $isMember = $colocation->users()->where('user_id', $user->id)->wherePivotNull('left_at')->exists();
+        if(!$isMember){
+            return back()->with('error', 'Cet utilisateur n’est pas membre actif.');
+        }
+        $colocation->users()->updateExistingPivot($user->id, ['left_at' => now()]);
+        return back()->with('success', 'Membre retiré avec succès.');
     }
 }

@@ -52,22 +52,31 @@
         <h2 class="font-bold mb-4">Membres actifs</h2>
 
         <ul class="space-y-2">
-            @foreach($colocation->users as $member)
-                <li class="flex justify-between bg-white p-3 rounded shadow-sm">
+        @foreach($colocation->users as $member)
+            <li class="flex justify-between bg-white p-3 rounded shadow-sm items-center">
+                <div>
+                    {{ $member->name }}
+                    @if($member->id === $colocation->owner_id)
+                        <span class="text-xs text-orange-500">(Owner)</span>
+                    @endif
+                </div>
 
-                    <span>
-                        {{ $member->name }}
-                        @if($member->id === $colocation->owner_id)
-                            <span class="text-xs text-orange-500">(Owner)</span>
-                        @endif
-                    </span>
-
+                <div class="flex items-center gap-2">
                     <span class="text-xs text-gray-400">
                         Joined: {{ $member->pivot->joined_at }}
                     </span>
 
-                </li>
-            @endforeach
+                    @if($colocation->owner_id === auth()->id() && $member->id !== auth()->id())
+                        <form action="{{ route('colocations.kick', [$colocation, $member]) }}" method="POST">
+                            @csrf
+                            <button class="bg-rose-500 text-white px-2 py-1 rounded text-xs hover:bg-rose-600">
+                                Retirer
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </li>
+        @endforeach
         </ul>
     </div>
 
