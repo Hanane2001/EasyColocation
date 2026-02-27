@@ -28,7 +28,7 @@
                             <i class="fas fa-arrow-right ml-3 text-sm"></i>
                         </a>
 
-                        <a href="{{ route('colocations') }}" 
+                        <a href="{{ route('colocations.index') }}" 
                         class="inline-flex items-center px-8 py-4 bg-white text-slate-600 text-lg font-bold rounded-2xl border border-slate-100 hover:bg-slate-50 transition-all">
                             Voir ma colocation
                         </a>

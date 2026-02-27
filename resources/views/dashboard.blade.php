@@ -19,18 +19,18 @@
                 </div>
 
                 <nav class="space-y-1">
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-medium transition-all">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-700 rounded-xl font-medium transition-all">
                         <i class="fas fa-th-large w-5"></i>
                         <span>Dashboard</span>
                     </a>
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-50 rounded-xl font-medium transition-all">
+                    <a href="{{ route('colocations.index') }}" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-50 rounded-xl font-medium transition-all">
                         <i class="fas fa-users w-5"></i>
                         <span>Colocations</span>
                     </a>
                     
                     <div class="text-[10px] font-bold text-gray-300 uppercase tracking-widest px-4 mt-8 mb-2">Admin</div>
                     
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:bg-gray-50 rounded-xl font-medium transition-all">
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('profile.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50' }} rounded-xl font-medium transition-all">
                         <i class="fas fa-user-circle w-5"></i>
                         <span>Profile</span>
                     </a>
@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="pt-2 border-t border-gray-50">
-                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-rose-400 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-bold transition-all group">
+                    <a href="{{ route('logout') }}" class="flex items-center gap-3 px-4 py-3 text-rose-400 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-bold transition-all group">
                         <i class="fas fa-sign-out-alt w-5 transition-transform group-hover:-translate-x-1"></i>
                         <span>Déconnexion</span>
                     </a>

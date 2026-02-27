@@ -31,7 +31,7 @@
                             <i class="fas fa-th-large w-5"></i>
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('colocations') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('colocations.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50' }} rounded-xl font-medium transition-all">
+                        <a href="{{ route('colocations.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('colocations.*') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50' }} rounded-xl font-medium transition-all">
                             <i class="fas fa-users w-5"></i>
                             <span>Colocations</span>
                         </a>

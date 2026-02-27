@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyColoc - Tableau de bord</title>
+    <title>EasyColoc - Invitation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -32,17 +32,25 @@
         <h2 class="text-xl font-extrabold text-slate-800 mb-2">Invitation colocation</h2>
         <p class="text-gray-400 text-sm leading-relaxed mb-8">
             Vous êtes invité à rejoindre <br>
-            <span class="text-indigo-600 font-bold">coloc 2</span>
+            <span class="text-indigo-600 font-bold">{{ $invitation->colocation->name }}</span>
         </p>
 
         <div class="w-full space-y-3">
-            <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100">
-                Accepter l'invitation
-            </button>
-            
-            <button class="w-full bg-transparent text-gray-400 hover:text-gray-600 font-semibold py-2 text-sm transition-colors">
-                Décliner
-            </button>
+            <!-- Form accepter -->
+            <form action="{{ route('invitations.accept', $invitation->token) }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-100">
+                    Accepter l'invitation
+                </button>
+            </form>
+
+            <!-- Form décliner -->
+            <form action="{{ route('invitations.decline', $invitation->token) }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full bg-transparent text-gray-400 hover:text-gray-600 font-semibold py-2 text-sm transition-colors">
+                    Décliner
+                </button>
+            </form>
         </div>
     </div>
 </body>

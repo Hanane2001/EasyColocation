@@ -55,13 +55,13 @@
 
                 <div class="bg-white p-6 rounded-[1.5rem] border border-gray-100 shadow-sm">
                     <div class="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">Colocations</div>
-                    <div class="text-4xl font-bold text-slate-800 mb-3">{{-- $colocations->count() --}}</div>
+                    <div class="text-4xl font-bold text-slate-800 mb-3">{{ $colocations->count() }}</div>
                     <span class="bg-indigo-50 text-indigo-600 text-[10px] px-2 py-1 rounded font-bold">Actives</span>
                 </div>
 
                 <div class="bg-white p-6 rounded-[1.5rem] border border-gray-100 shadow-sm">
                     <div class="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">Dépenses</div>
-                    <div class="text-4xl font-bold text-slate-800 mb-3">{{-- $expenses->sum('amount') --}}</div>
+                    <div class="text-4xl font-bold text-slate-800 mb-3">{{ $expenses->sum('amount') }}</div>
                     <span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded font-bold">Total cumulé</span>
                 </div>
 
