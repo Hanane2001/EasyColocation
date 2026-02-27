@@ -50,6 +50,8 @@ Route::middleware('auth')->group(function () {
     // Categories
     Route::post('/colocations/{colocation}/categories',[CategoryController::class, 'store'])->name('categories.store');
     Route::delete('/colocations/{colocation}/categories/{category}',[CategoryController::class, 'destroy'])->name('categories.destroy');
+    // Balances
+    Route::get('/colocations/{colocation}/balances', [ColocationController::class, 'balances'])->name('colocations.balances');
 });
 
 require __DIR__.'/auth.php';

@@ -72,4 +72,37 @@ class ColocationController extends Controller
         $colocation->users()->updateExistingPivot($user->id, ['left_at' => now()]);
         return back()->with('success', 'Membre retiré avec succès.');
     }
+
+    public function balances(Colocation $colocation){
+        if (!$colocation->activeUsers()->where('user_id', auth()->id())->exists()) {
+            abort(403);
+        }
+        $users = $colocation->activeUsers()->get();
+        $totalExpenses = $colocation->expenses()->sum('amount');
+        $memberCount = $users->count();
+        $individualShare = $memberCount > 0 ? $totalExpenses / $memberCount : 0;
+        $balances = [];
+        foreach ($users as $user) {
+            $totalPaid = $colocation->expenses()->where('user_id', $user->id)->sum('amount');
+            $totalReceived = $colocation->payments()->where('receiver_id', $user->id)->sum('amount');
+            $totalSent = $colocation->payments()->where('payer_id', $user->id)->sum('amount');
+            $balance = $totalPaid - $individualShare + $totalReceived - $totalSent;
+            $balances[] = ['user' => $user,'paid' => $totalPaid,'share' => $individualShare,'balance' => $balance,];
+        }
+        $creditors = collect($balances)->filter(fn($b) => $b['balance'] > 0)->values();
+        $debtors = collect($balances)->filter(fn($b) => $b['balance'] < 0)->values();
+        $transactions = [];
+        foreach ($debtors as $debtor) {
+            $debt = abs($debtor['balance']);
+            foreach ($creditors as &$creditor) {
+                if ($debt <= 0) break;
+                if ($creditor['balance'] <= 0) continue;
+                $amount = min($debt, $creditor['balance']);
+                $transactions[] = ['from' => $debtor['user']->name,'to'   => $creditor['user']->name,'amount' => $amount];
+                $debt -= $amount;
+                $creditor['balance'] -= $amount;
+            }
+        }
+        return view('colocations.balances', compact('colocation','balances','transactions','totalExpenses','individualShare'));
+    }
 }

@@ -162,7 +162,7 @@
                 </a>
             </div>
 
-            <a href="{{-- route('balances.show', $colocation) --}}"
+            <a href="{{ route('colocations.balances', $colocation) }}"
             class="bg-emerald-600 text-white px-4 py-2 rounded text-sm">
             Voir les balances
             </a>

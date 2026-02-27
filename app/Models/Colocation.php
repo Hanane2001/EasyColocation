@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Invitation;
+use App\Models\Expense;
+use App\Models\Category;
+use App\Models\Payment;
 
 class Colocation extends Model
 {
@@ -25,5 +29,8 @@ class Colocation extends Model
     }
     public function categories(){
         return $this->hasMany(Category::class);
+    }
+    public function payments(){
+        return $this->hasMany(Payment::class);
     }
 }
