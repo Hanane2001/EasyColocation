@@ -40,12 +40,29 @@ class ColocationController extends Controller
         if($colocation->owner_id == auth()->id()){
             return back()->with('error', 'Transférez la propriété avant');
         }
-        $colocation->users()->updateExistingPivot(auth()->id(), ['left_at'=>now()]);
+        $user = auth()->user();
+        $balance = $this->calculateUserBalance($colocation, $user);
+
+        if($balance < 0){
+            $user->decrement('reputation');
+        } else {
+            $user->increment('reputation');
+        }
+        $colocation->users()->updateExistingPivot($user->id, ['left_at'=>now()]);
         return back();
     }
     public function cancel(Colocation $colocation){
         if($colocation->owner_id !== auth()->id()){
             abort(403);
+        }
+        $users = $colocation->activeUsers()->get();
+        foreach($users as $user){
+            $balance = $colocation->calculateUserBalance($user);
+            if($balance < 0){
+                $user->decrement('reputation');
+            } else {
+                $user->increment('reputation');
+            }
         }
         $colocation->update(['statusColocation'=>'cancelled']);
         return back();
@@ -68,6 +85,14 @@ class ColocationController extends Controller
         $isMember = $colocation->users()->where('user_id', $user->id)->wherePivotNull('left_at')->exists();
         if(!$isMember){
             return back()->with('error', 'Cet utilisateur n’est pas membre actif.');
+        }
+        $balance = $colocation->calculateUserBalance($user);
+        $owner = $colocation->owner;
+        if($balance < 0){
+            $user->decrement('reputation');
+            $colocation->payments()->create(['amount' => abs($balance),'payer_id' => $owner->id,'receiver_id' => $user->id,'paid_at' => now()]);
+        } else {
+            $user->increment('reputation');
         }
         $colocation->users()->updateExistingPivot($user->id, ['left_at' => now()]);
         return back()->with('success', 'Membre retiré avec succès.');
@@ -98,7 +123,7 @@ class ColocationController extends Controller
                 if ($debt <= 0) break;
                 if ($creditor['balance'] <= 0) continue;
                 $amount = min($debt, $creditor['balance']);
-                $transactions[] = ['from' => $debtor['user']->name,'to'   => $creditor['user']->name,'amount' => $amount];
+                $transactions[] = ['from' => $debtor['user']->name,'from_id' => $debtor['user']->id,'to' => $creditor['user']->name,'to_id' => $creditor['user']->id,'amount' => $amount,];
                 $debt -= $amount;
                 $creditor['balance'] -= $amount;
             }

@@ -33,4 +33,15 @@ class Colocation extends Model
     public function payments(){
         return $this->hasMany(Payment::class);
     }
+
+    public function calculateUserBalance(User $user){
+        $users = $this->activeUsers()->get();
+        $totalExpenses = $this->expenses()->sum('amount');
+        $memberCount = $users->count();
+        $share = $memberCount > 0 ? $totalExpenses / $memberCount : 0;
+        $paid = $this->expenses()->where('user_id', $user->id)->sum('amount');
+        $received = $this->payments()->where('receiver_id', $user->id)->sum('amount');
+        $sent = $this->payments()->where('payer_id', $user->id)->sum('amount');
+        return $paid - $share + $received - $sent;
+    }
 }

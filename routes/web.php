@@ -5,6 +5,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -52,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/colocations/{colocation}/categories/{category}',[CategoryController::class, 'destroy'])->name('categories.destroy');
     // Balances
     Route::get('/colocations/{colocation}/balances', [ColocationController::class, 'balances'])->name('colocations.balances');
+    // Payments
+    Route::post('/colocations/{colocation}/payments/mark-paid', [PaymentController::class, 'markAsPaid'])->name('payments.markPaid');
 });
 
 require __DIR__.'/auth.php';
