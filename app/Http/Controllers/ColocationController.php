@@ -41,7 +41,7 @@ class ColocationController extends Controller
             return back()->with('error', 'Transférez la propriété avant');
         }
         $user = auth()->user();
-        $balance = $this->calculateUserBalance($colocation, $user);
+        $balance = $colocation->calculateUserBalance($user);
 
         if($balance < 0){
             $user->decrement('reputation');
