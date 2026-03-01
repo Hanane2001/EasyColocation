@@ -7,7 +7,7 @@
     <div class="relative pt-16 pb-32 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center">
-                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest bg-indigo-50 text-indigo-600 mb-8 italic">
+                <span class="inline-flex items-center mt-5 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest bg-indigo-50 text-indigo-600 mb-8 italic">
                     🚀 Simplifiez votre vie commune
                 </span>
                 

@@ -20,13 +20,20 @@
             <aside class="w-64 bg-white border-r border-gray-100 flex flex-col p-6 fixed inset-y-0 left-0 z-20">
                 <div class="flex-1">
                     <div class="flex items-center gap-2 mb-10">
-                        <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
-                            <i class="fas fa-home text-sm"></i>
-                        </div>
-                        <span class="text-xl font-bold text-indigo-900 tracking-tight">EasyColoc</span>
+                        <a href="{{ url('/') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
+                                <i class="fas fa-home text-sm"></i>
+                            </div>
+                            <span class="text-xl font-bold text-indigo-900 tracking-tight">EasyColoc</span>
+                        </a>
                     </div>
 
                     <nav class="space-y-1">
+                        <a href="{{ url('/') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->is('/') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600' }} rounded-xl font-medium transition-all">
+                            <i class="fas fa-home w-5"></i>
+                            <span>Accueil</span>
+                        </a>
+
                         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700' : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600' }} rounded-xl font-medium transition-all">
                             <i class="fas fa-th-large w-5"></i>
                             <span>Dashboard</span>
@@ -84,24 +91,12 @@
         @else
             <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 fixed w-full z-20">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
-                    <a href="{{ route('home') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                    <a href="{{ url('/') }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                         <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
                             <i class="fas fa-home text-sm"></i>
                         </div>
                         <span class="text-xl font-bold text-indigo-900 tracking-tight">EasyColoc</span>
                     </a>
-
-                    <div class="hidden md:flex items-center gap-8">
-                        <a href="#features" class="text-sm font-medium text-slate-400 hover:text-indigo-600 transition-colors">
-                            Fonctionnalités
-                        </a>
-                        <a href="#pricing" class="text-sm font-medium text-slate-400 hover:text-indigo-600 transition-colors">
-                            Tarifs
-                        </a>
-                        <a href="#contact" class="text-sm font-medium text-slate-400 hover:text-indigo-600 transition-colors">
-                            Contact
-                        </a>
-                    </div>
 
                     <div class="flex items-center gap-4">
                         <a href="{{ route('login') }}" 
