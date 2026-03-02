@@ -38,7 +38,10 @@ class ColocationController extends Controller
     }
     public function leave(Colocation $colocation){
         if($colocation->owner_id == auth()->id()){
-            return back()->with('error', 'Transférez la propriété avant');
+            $otherMembersCount = $colocation->activeUsers()->where('user_id', '!=', auth()->id())->count();    
+            if ($otherMembersCount > 0) {
+                return back()->with('error', 'Vous êtes propriétaire. Veuillez d\'abord transférer la propriété à un autre membre avant de quitter.');
+            }
         }
         $user = auth()->user();
         $balance = $colocation->calculateUserBalance($user);
@@ -49,7 +52,7 @@ class ColocationController extends Controller
             $user->increment('reputation');
         }
         $colocation->users()->updateExistingPivot($user->id, ['left_at'=>now()]);
-        return back();
+        return redirect()->route('colocations.index')->with('success', 'Vous avez quitté la colocation avec succès.');
     }
     public function cancel(Colocation $colocation){
         if($colocation->owner_id !== auth()->id()){
@@ -71,8 +74,28 @@ class ColocationController extends Controller
         if ($colocation->owner_id !== auth()->id()) {
             abort(403);
         }
-        $colocation->update(['owner_id' => $request->new_owner_id]);
-        return back();
+        $request->validate([
+            'new_owner_id' => 'required|exists:users,id'
+        ]);
+        $newOwner = User::findOrFail($request->new_owner_id);
+        $isActiveMember = $colocation->users()->where('user_id', $newOwner->id)->wherePivotNull('left_at')->exists();
+        if (!$isActiveMember) {
+            return back()->with('error', 'Le nouvel owner doit être un membre actif de la colocation.');
+        }
+
+        $colocation->update(['owner_id' => $newOwner->id]);
+        if ($request->has('leave_after_transfer') && $request->leave_after_transfer) {
+            $oldOwner = auth()->user();
+            $balance = $this->calculateUserBalance($colocation, $oldOwner);
+            if ($balance < 0) {
+                $oldOwner->decrement('reputation');
+            } else {
+                $oldOwner->increment('reputation');
+            }
+            $colocation->users()->updateExistingPivot($oldOwner->id, ['left_at' => now()]);
+            return redirect()->route('colocations.index')->with('success', 'Propriété transférée avec succès. Vous avez quitté la colocation.');
+        }
+        return back()->with('success', 'Propriété transférée avec succès à ' . $newOwner->name);
     }
 
     public function kickMember(Colocation $colocation, User $user){

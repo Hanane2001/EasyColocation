@@ -127,7 +127,13 @@
                             </div>
 
                             @if($colocation->owner_id === auth()->id() && $member->id !== auth()->id())
-                                <div class="mt-2 flex justify-end">
+                                <div class="mt-2 flex justify-end gap-2">
+                                    <button onclick="openTransferModal({{ $member->id }}, '{{ $member->name }}')"
+                                            class="text-indigo-400 hover:text-indigo-600 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                                        <i class="fas fa-crown"></i>
+                                        Transférer propriété
+                                    </button>
+                                    
                                     <form action="{{ route('colocations.kick', [$colocation, $member]) }}" method="POST"
                                           onsubmit="return confirm('Retirer {{ $member->name }} de la colocation ?')">
                                         @csrf
@@ -320,14 +326,73 @@
     </div>
 </div>
 
+<div id="transferModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-2xl w-96 max-w-md">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-crown text-indigo-600 text-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-800 mb-2">Transférer la propriété</h2>
+            <p class="text-sm text-gray-500">
+                Vous êtes sur le point de transférer la propriété à <span id="transferMemberName" class="font-bold text-indigo-600"></span>
+            </p>
+        </div>
+
+        <form method="POST" action="{{ route('colocations.transfer', $colocation) }}" id="transferForm">
+            @csrf
+            <input type="hidden" name="new_owner_id" id="newOwnerId">
+            
+            <div class="mb-6">
+                <label class="flex items-center gap-2 text-sm text-gray-600">
+                    <input type="checkbox" name="leave_after_transfer" value="1" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <span>Quitter la colocation après le transfert</span>
+                </label>
+                <p class="text-xs text-gray-400 mt-1 ml-6">
+                    Si coché, vous quitterez automatiquement la colocation
+                </p>
+            </div>
+
+            <div class="flex gap-3">
+                <button type="button" 
+                        onclick="document.getElementById('transferModal').classList.add('hidden')"
+                        class="flex-1 bg-gray-100 text-gray-700 px-4 py-3 rounded-xl font-bold hover:bg-gray-200 transition">
+                    Annuler
+                </button>
+                <button type="submit" 
+                        class="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-indigo-700 transition">
+                    Confirmer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
     window.onclick = function(event) {
-        const modal = document.getElementById('newCategoryModal');
-        if (event.target === modal) {
-            modal.classList.add('hidden');
+        const categoryModal = document.getElementById('newCategoryModal');
+        const transferModal = document.getElementById('transferModal');
+        
+        if (event.target === categoryModal) {
+            categoryModal.classList.add('hidden');
+        }
+        if (event.target === transferModal) {
+            transferModal.classList.add('hidden');
         }
     }
+
+    function openTransferModal(userId, userName) {
+        document.getElementById('newOwnerId').value = userId;
+        document.getElementById('transferMemberName').textContent = userName;
+        document.getElementById('transferModal').classList.remove('hidden');
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.getElementById('newCategoryModal').classList.add('hidden');
+            document.getElementById('transferModal').classList.add('hidden');
+        }
+    });
 </script>
 @endpush
 @endsection
